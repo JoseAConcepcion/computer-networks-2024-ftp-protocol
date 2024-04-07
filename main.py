@@ -10,17 +10,21 @@ def main():
     cliente = ClienteFTP('194.108.117.16', 21) #test.rebex.net para probar con un servidor FTP
     cliente.conectar()
     cliente.enviar_comando('USER anonymous')
-    time.sleep(1)  
     cliente.enviar_comando('PASS')
-    time.sleep(1)  
     cliente.enviar_comando('PWD')
-    time.sleep(1)  
     cliente.enviar_comando('HELP SITE')
     cliente.enviar_comando('CWD pub')
     cliente.enviar_comando('PWD')
+    #! estos dos no funcionan porque esperan info adicional
+    #! Rejecting data connection. Send 'EPSV', 'EPRT', 'PASV' or 'PORT' first.
+    cliente.enviar_comando('PASV')
     cliente.enviar_comando('LIST')
-    cliente.enviar_comando('NLST') #! estos dos no funcionan porque esperan info adicional
-    cliente.enviar_comando('CDUP')
+    cliente.enviar_comando('TYPE A')
+    # cliente.enviar_comando('PASV')
+    # cliente.enviar_comando('NLST') 
+    cliente.probar_listar()
+
+    # cliente.enviar_comando('CDUP')
     cliente.desconectar()
     
 

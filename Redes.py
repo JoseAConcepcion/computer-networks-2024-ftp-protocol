@@ -34,6 +34,9 @@ class ClienteFTP:
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.connect((self.host, self.puerto))
 
+        # * estableciendo la conexion pasiva por defecto en ipv4
+        self.socket.sendall(bytes('PASV' + '\r\n', 'utf-8'))
+
     def desconectar(self):
         """
         Desconecta el socket del servidor FTP.
@@ -53,4 +56,13 @@ class ClienteFTP:
         respuesta = self.socket.recv(4096).decode('utf-8')
         print(respuesta, end='')
 
-
+    def probar_listar(self):
+        self.socket.sendall('PASV\r\n'.encode('utf-8'))
+        self.socket.sendall('LIST\r\n'.encode('utf-8'))
+# Recibir y procesar la respuesta del servidor
+        while True:
+            respuesta = self.socket.recv(4096).decode('utf-8')
+            if not respuesta:
+                break
+            print(respuesta, end='')
+            print("respuesta recibida")
