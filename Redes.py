@@ -3,13 +3,14 @@ import re
 import os
 
 class FTPClient:
-    def init(self, host, port=21):
+
+    def __init__(self, host, port=21):
         self.host = host
         self.port = port
         self.control_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.control_socket.settimeout(10)
 
-    def connect(self,username='anonymous', password=''):
+    def connect(self, username='anonymous', password=''):
         self.control_socket.connect((self.host, self.port))
         self.userName = username
         self.password = password
@@ -60,7 +61,7 @@ class FTPClient:
                 if not part:
                     break
                 resp += part
-            print(resp)
+            # print(resp)
             DataTransmissionSocket.close()
             return resp
     
@@ -96,6 +97,7 @@ class FTPClient:
             nombre (str): El nombre del archivo del que se quiere obtener el tamaño.
         """
         self.SendCommand('SIZE ' + nombre)
+
     def Download(self, remoteDirectory: str, type='A'):
         data_socket = self.passiveMode()
         if not data_socket:
@@ -137,8 +139,17 @@ class FTPClient:
         else:
             print("Permisos insuficientes")
             data_socket.close()
-            return resp  
+            return resp
         
+    def abor(self):
+        self.SendCommand('ABOR')
+        
+    def cwd(self, path):
+        return self.SendCommand('CWD ' + path)
+    
+    
+    
+    
     def exit(self):
         response = self.SendCommand('QUIT')
         self.control_socket.close()
