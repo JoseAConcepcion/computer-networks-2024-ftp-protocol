@@ -2,6 +2,7 @@
 Este modulo define la clase `ClienteFTP` que permite conectarse a un servidor FTP y enviar comandos.
 """
 import socket
+import re
 
 class ClienteFTP:
     """
@@ -82,6 +83,68 @@ class ClienteFTP:
         """
         self.enviar_comando('RMD ' + nombre)
 
+    def get_size(self, nombre: str):
+        """
+        Obtiene el tamaño de un archivo en el servidor FTP.
+
+        Args:
+            nombre (str): El nombre del archivo del que se quiere obtener el tamaño.
+        """
+        self.enviar_comando('SIZE ' + nombre)
+
+    def parse_after_passive(resp):
+        
+        _227_re = re.compile(r'(\d+),(\d+),(\d+),(\d+),(\d+),(\d+)', re.ASCII)
+        m = _227_re.search(resp)
+        if not m:
+            raise error_proto(resp)
+        numbers = m.groups()
+        host = '.'.join(numbers[:4])
+        port = (int(numbers[4])) + int(numbers[5])
+        return host, port
+
+    def probar_listar(self):
+        """
+        Prueba el comando LIST.
+        """
+        self.enviar_comando('PASV')
+        direccion_datos = ('194.108.117.16', 1024)
+        data_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        data_socket.connect((direccion_datos[0], direccion_datos[1]))
+
+        self.enviar_comando('LIST')
+
+        resp = ''
+        while True:
+            partial_resp = data_socket.recv(4096).decode()
+            if not resp:
+                break
+            resp += partial_resp
+        data_socket.close()
+
+        return resp
+
+    # def list_files(self, directory="."):
+    #     """Lista los archivos en el directorio especificado,
+    #      devolviendo una lista con la distinción entre archivos 
+    #      y carpetas."""
+    #     data_response = ''
+    #     try:
+    #         data_socket = self.pasv_mode()
+    #         if data_socket is None:
+    #             print("No se pudo establecer una conexión de datos.")
+    #             return
+    #         self.send_command(f'LIST {directory}')
+    #         data_response = ""
+    #         while True:
+    #             data_part = data_socket.recv(4096).decode()
+    #             if not data_part:
+    #                 break
+    #             data_response += data_part
+    #         data_socket.close()
+    #         print(self.read_response())
+    #     return data_response
+
     # def probar_listar(self):
     #     self.socket.sendall('PASV\r\n'.encode('utf-8'))
     #     mensaje_pasivo = self.socket.recv(4096).decode('utf-8')
@@ -90,4 +153,3 @@ class ClienteFTP:
     #     # direccion_datos = ('', puerto)
     #     direccion_datos = ('194.108.117.16', 1024)
     #     datos_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
