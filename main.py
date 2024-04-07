@@ -16,6 +16,9 @@ def main():
     cliente = FTPClient('194.108.117.16')  
     print(cliente.connect())
     print(cliente.logIn())
+    # print(cliente.getStatus('/pub'))
+    # todo probar el delete file
+    print(cliente.nlist())
     print(cliente.SendCommand('PWD'))
     print(cliente.list())
     # time.sleep(10)

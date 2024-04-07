@@ -152,6 +152,50 @@ class FTPClient:
     
     def NoOp(self):
         return self.SendCommand('NOOP')
+    def rename(self, oldName, newName):
+        resp = self.SendCommand('RNFR ' + oldName)
+        if resp[0] != '3':
+            print('error al renombrar, no existe el archivo')
+            return
+        return self.SendCommand('RNTO ' + newName) 
+    
+    # este comando puede estar implementado o no en el servidor
+    def getStatus(self, path=None):
+        if path is None:
+            return self.SendCommand('STAT')
+        else:
+            return self.SendCommand('STAT ' + path)
+    
+    def getSystem(self):
+        return self.SendCommand('SYST')
+    
+    def getSiteParameters(self):
+        return self.SendCommand('SITE')
+    
+    def nlist(self, path=''):
+        try:
+            DataTransmissionSocket = self.passiveMode()
+            if DataTransmissionSocket is None:
+                print("No se pudo conectar al socket")
+                return
+            self.SendCommand(f'NLST ' + path)
+            resp = ""
+            while True:
+                part = DataTransmissionSocket.recv(4096).decode()
+                if not part:
+                    break
+                resp += part
+            DataTransmissionSocket.close()
+            return resp
+
+        except Exception as e:
+            print(f"Error al listar archivos: {e}")
+            
+    def deleteFile(self, path):
+        return self.SendCommand('DELE ' + path)
+    
+    def restartTransfer(self, marker):
+        return self.SendCommand('REST ' + marker)
     
     def CDUP(self):
         return self.SendCommand('CDUP')
