@@ -147,9 +147,79 @@ class FTPClient:
     def cwd(self, path):
         return self.SendCommand('CWD ' + path)
     
+    def help(self, args=""):
+        return self.SendCommand('HELP ' + args)
     
+    def NoOp(self):
+        return self.SendCommand('NOOP')
     
+    def CDUP(self):
+        return self.SendCommand('CDUP')
+    def DataPort(self, ip, port):
+        return self.SendCommand(f'PORT {ip},{port}')
+
+    def Account(self, account):
+        return self.SendCommand('ACCT ' + account)
+    def Reinitialize(self):
+        return self.SendCommand('REIN')
+    def FileStructure(self, structure):
+        if(structure in ('F', 'R', 'P')):
+            return self.SendCommand('STRU ' + structure)
+        else:
+            return "Error, 'structure' must be 'F', 'R', or 'P'."
+    def StructureMount(self, structure):        
+        return self.SendCommand('SMNT ' + structure)
+    def TransferMode(self, mode):
+        if(mode in ('S', 'B', 'C')):
+            return self.SendCommand('MODE ' + mode)
+        else:
+            return "Error, 'mode' must be 'S' or 'B' or 'C'."
+    def UploadUnique(self, local_filename, filename):
+        data_socket = self.passiveMode()
+        if not data_socket:
+            return "Error estableciendo modo PASV."
+        
+        resp = self.SendCommand(f'STOU {filename}')
+
+        if(resp[0]!='5'): 
+            with open(local_filename, 'rb') as file:
+                while True:
+                    data = file.read(1024)
+                    if not data:
+                        break
+                    data_socket.sendall(data)
+            data_socket.close()
+            return self.getResponse()
+        else:
+            print("Permisos insuficientes")
+            data_socket.close()
+            return resp
+    def Append(self, local_filename, filename):
+        data_socket = self.passiveMode()
+        if not data_socket:
+            return "Error estableciendo modo PASV."
+        
+        resp = self.SendCommand(f'APPE {filename}')
+
+        if(resp[0]!='5'): 
+            with open(local_filename, 'rb') as file:
+                while True:
+                    data = file.read(1024)
+                    if not data:
+                        break
+                    data_socket.sendall(data)
+            data_socket.close()
+            return self.getResponse()
+        else:
+            print("Permisos insuficientes")
+            data_socket.close()
+            return resp
     
+    def Allocate(self, numberOfBytes, Size = 0):
+        if(Size == 0):
+            return self.SendCommand('ALLO ' + numberOfBytes)
+        else:
+            return self.SendCommand('ALLO ' + numberOfBytes + ' ' + 'R' + ' ' + Size)
     def exit(self):
         response = self.SendCommand('QUIT')
         self.control_socket.close()
