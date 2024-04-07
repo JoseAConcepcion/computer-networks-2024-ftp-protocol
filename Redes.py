@@ -27,7 +27,7 @@ class ClienteFTP:
         self.host = host
         self.puerto = puerto
 
-    def conectar(self):
+    def conectar(self, user = '', password = ''):
         """
         Crea un socket y se conecta al servidor FTP.
         """
@@ -36,6 +36,14 @@ class ClienteFTP:
 
         # * estableciendo la conexion pasiva por defecto en ipv4
         self.socket.sendall(bytes('PASV' + '\r\n', 'utf-8'))
+        if not user:
+            user = 'anonymous'
+        if not password:
+            password = ''
+        
+        response = self.enviar_comando('USER ' + user)
+        response = self.enviar_comando('PASS ' + password)
+        return response
 
     def desconectar(self):
         """
@@ -56,13 +64,30 @@ class ClienteFTP:
         respuesta = self.socket.recv(4096).decode('utf-8')
         print(respuesta, end='')
 
-    def probar_listar(self):
-        self.socket.sendall('PASV\r\n'.encode('utf-8'))
-        self.socket.sendall('LIST\r\n'.encode('utf-8'))
-# Recibir y procesar la respuesta del servidor
-        while True:
-            respuesta = self.socket.recv(4096).decode('utf-8')
-            if not respuesta:
-                break
-            print(respuesta, end='')
-            print("respuesta recibida")
+    def mkdir(self, nombre: str):
+        """
+        Crea un directorio en el servidor FTP.
+
+        Args:
+            nombre (str): El nombre del directorio a crear.
+        """
+        self.enviar_comando('MKD ' + nombre)
+
+    def rmdir(self, nombre: str):
+        """
+        Elimina un directorio en el servidor FTP.
+
+        Args:
+            nombre (str): El nombre del directorio a eliminar.
+        """
+        self.enviar_comando('RMD ' + nombre)
+
+    # def probar_listar(self):
+    #     self.socket.sendall('PASV\r\n'.encode('utf-8'))
+    #     mensaje_pasivo = self.socket.recv(4096).decode('utf-8')
+        
+    #     self.socket.sendall('LIST\r\n'.encode('utf-8'))
+    #     # direccion_datos = ('', puerto)
+    #     direccion_datos = ('194.108.117.16', 1024)
+    #     datos_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
