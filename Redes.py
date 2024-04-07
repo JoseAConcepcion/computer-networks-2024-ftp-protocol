@@ -142,7 +142,7 @@ class FTPClient:
             return resp
         
     def abor(self):
-        self.SendCommand('ABOR')
+        return self.SendCommand('ABOR')
         
     def cwd(self, path):
         return self.SendCommand('CWD ' + path)
