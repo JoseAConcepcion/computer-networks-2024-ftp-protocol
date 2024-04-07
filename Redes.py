@@ -3,7 +3,7 @@ import re
 import os
 
 class FTPClient:
-    def __init__(self, host, port=21):
+    def init(self, host, port=21):
         self.host = host
         self.port = port
         self.control_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -62,8 +62,6 @@ class FTPClient:
                 resp += part
             print(resp)
             DataTransmissionSocket.close()
-            print(self.getResponse())
-
             return resp
     
         except Exception as e:
@@ -114,7 +112,33 @@ class FTPClient:
         data_socket.close()
         return self.getResponse()
 
+    def UpLoad(self, local_filename, filename):
+        """Sube un archivo al servidor FTP."""
+        file_path = os.path.abspath(os.path.join(os.getcwd(), local_filename))
+        
+        if not os.path.exists(file_path):
+            return f"Error, file '{file_path}' not found"
+        
+        data_socket = self.passiveMode()
+        if not data_socket:
+            return "Error estableciendo modo PASV."
+        
+        resp = self.SendCommand(f'STOR {filename}')
 
+        if(resp[0]!='5'): 
+            with open(local_filename, 'rb') as file:
+                while True:
+                    data = file.read(1024)
+                    if not data:
+                        break
+                    data_socket.sendall(data)
+            data_socket.close()
+            return self.getResponse()
+        else:
+            print("Permisos insuficientes")
+            data_socket.close()
+            return resp  
+        
     def exit(self):
         response = self.SendCommand('QUIT')
         self.control_socket.close()
