@@ -1,4 +1,5 @@
 from Redes import FTPClient
+import time
 def Application():
     print('Por favor introduzca la direccion ip del servidor: ')
     ip = input()
@@ -18,6 +19,13 @@ def Application():
         commandParts = input().strip().split(" ")
         command = commandParts[0].lower()
         params = commandParts[1:]
+        
+        
+        if command == 'EXIT':
+            print('Desconectando.')
+            print('Desconectando..')
+            print('Desconectando...')
+            break
         if command == 'cd':
             print(cliente.cwd(*params))
             continue
@@ -29,6 +37,7 @@ def Application():
             continue
         if command == 'ls':
             print(cliente.nlist(*params))
+            print(cliente.getResponse())
             continue
         if command == 'ls-a':
             print(cliente.list(*params))
