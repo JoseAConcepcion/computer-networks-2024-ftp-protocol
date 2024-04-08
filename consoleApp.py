@@ -41,6 +41,7 @@ def Application():
             continue
         if command == 'ls-a':
             print(cliente.list(*params))
+            print(cliente.getResponse())
             continue
         if command == 'exit':
             print(cliente.exit())
@@ -50,9 +51,11 @@ def Application():
             continue
         if command == 'upload':
             print(cliente.UpLoad(*params))
+            print(cliente.getResponse())
             continue
         if command == 'download':
             print(cliente.Download(*params))
+            print(cliente.getResponse())
             continue
         if command == 'passive':
             print(cliente.passiveMode())
