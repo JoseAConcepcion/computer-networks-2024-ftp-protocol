@@ -19,15 +19,22 @@ class FTPClient:
     def getResponse(self):
         response = ''
         while True:
-            part = self.control_socket.recv(1024).decode()
-            response += part
-            if response.endswith('\r\n') or len(part) < 1024:
+            try:
+                part = self.control_socket.recv(1024).decode()
+                response += part
+                if response.endswith('\r\n') or len(part) < 1024:
+                    break
+            except Exception as e:
+                response = str(e)
                 break
         return response
 
     def SendCommand(self, command):
-        self.control_socket.sendall(f"{command}\r\n".encode())
-        return self.getResponse()
+        try: 
+            self.control_socket.sendall(f"{command}\r\n".encode())
+            return self.getResponse()
+        except Exception as e:
+            return f'Error: {e}'
 
     def logIn(self):
         self.SendCommand(f'USER {self.userName}')
@@ -57,10 +64,14 @@ class FTPClient:
             self.SendCommand(f'LIST {directory}')
             resp = ""
             while True:
-                part = DataTransmissionSocket.recv(4096).decode()
-                if not part:
+                try:
+                    part = DataTransmissionSocket.recv(4096).decode()
+                    if not part:
+                        break
+                    resp += part
+                except Exception as e:
+                    resp = str(e)
                     break
-                resp += part
             # print(resp)
             DataTransmissionSocket.close()
             return resp
@@ -107,10 +118,13 @@ class FTPClient:
         #self.read_response()
         with open(remoteDirectory.split('/')[-1], 'wb') as file:
             while True:
-                data = data_socket.recv(1024)
-                if not data:
+                try:
+                    data = data_socket.recv(1024)
+                    if not data:
+                        break
+                    file.write(data)
+                except Exception as e:
                     break
-                file.write(data)
         data_socket.close()
         return self.getResponse()
 
@@ -130,10 +144,13 @@ class FTPClient:
         if(resp[0]!='5'): 
             with open(local_filename, 'rb') as file:
                 while True:
-                    data = file.read(1024)
-                    if not data:
+                    try:
+                        data = file.read(1024)
+                        if not data:
+                            break
+                        data_socket.sendall(data)
+                    except Exception as e:
                         break
-                    data_socket.sendall(data)
             data_socket.close()
             return self.getResponse()
         else:
@@ -181,10 +198,14 @@ class FTPClient:
             self.SendCommand(f'NLST ' + path)
             resp = ""
             while True:
-                part = DataTransmissionSocket.recv(4096).decode()
-                if not part:
+                try:
+                    part = DataTransmissionSocket.recv(4096).decode()
+                    if not part:
+                        break
+                    resp += part
+                except Exception as e:
+                    resp = str(e)
                     break
-                resp += part
             DataTransmissionSocket.close()
             return resp
 
@@ -228,10 +249,13 @@ class FTPClient:
         if(resp[0]!='5'): 
             with open(local_filename, 'rb') as file:
                 while True:
-                    data = file.read(1024)
-                    if not data:
+                    try:
+                        data = file.read(1024)
+                        if not data:
+                            break
+                        data_socket.sendall(data)
+                    except Exception as e:
                         break
-                    data_socket.sendall(data)
             data_socket.close()
             return self.getResponse()
         else:
@@ -248,10 +272,13 @@ class FTPClient:
         if(resp[0]!='5'): 
             with open(local_filename, 'rb') as file:
                 while True:
-                    data = file.read(1024)
-                    if not data:
+                    try:
+                        data = file.read(1024)
+                        if not data:
+                            break
+                        data_socket.sendall(data)
+                    except Exception as e:
                         break
-                    data_socket.sendall(data)
             data_socket.close()
             return self.getResponse()
         else:

@@ -51,9 +51,11 @@ def Application():
             continue
         if command == 'upload':
             print(cliente.UpLoad(*params))
+            print(cliente.getResponse())
             continue
         if command == 'download':
             print(cliente.Download(*params))
+            print(cliente.getResponse())
             continue
         if command == 'continueive':
             print(cliente.continueiveMode())
