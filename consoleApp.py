@@ -8,11 +8,11 @@ def Application():
     print('Por favor introduzca el usuario: ')
     user = input()
     print('Por favor introduzca la contrasena: ')
-    password = input()
-    if password is None: password = ""
+    continueword = input()
+    if continueword is None: continueword = ""
     cliente = FTPClient(ip, int(port))
-    if password is '': print('Ejel vacio')
-    print(cliente.connect(user, password))
+    if continueword is '': print('Ejel vacio')
+    print(cliente.connect(user, continueword))
     print(cliente.logIn())
     while True:
         print('Por favor introduzca el comando: ')
@@ -21,7 +21,7 @@ def Application():
         params = commandParts[1:]
         
         
-        if command == 'EXIT':
+        if command == 'terminate':
             print('Desconectando.')
             print('Desconectando..')
             print('Desconectando...')
@@ -41,6 +41,7 @@ def Application():
             continue
         if command == 'ls-a':
             print(cliente.list(*params))
+            print(cliente.getResponse())
             continue
         if command == 'exit':
             print(cliente.exit())
@@ -54,8 +55,8 @@ def Application():
         if command == 'download':
             print(cliente.Download(*params))
             continue
-        if command == 'passive':
-            print(cliente.passiveMode())
+        if command == 'continueive':
+            print(cliente.continueiveMode())
             continue
         if command == 'sizeof':
             print(cliente.get_size(*params))
@@ -72,34 +73,48 @@ def Application():
         if command == 'rename':
             print(cliente.rename(*params))
             continue
-        # 
         if command == 'status':
-            pass
+            print(cliente.getStatus(*params))
+            continue
         if command == 'system':
-            pass
+            print(cliente.getSystem())
+            continue
         if command == 'siteparams':
-            pass
+            print(cliente.getSiteParameters())
+            continue
         if command == 'delete':
-            pass
+            print(cliente.deleteFile(*params))
+            continue
         if command == 'restarttransfer':
-            pass
+            print(cliente.restartTransfer(*params))
+            continue
         if command == 'cdup':
-            pass
+            print(cliente.CDUP())
+            continue
         if command == 'port':
-            pass
+            print(cliente.DataPort(*params))
+            continue
         if command == 'acc':
-            pass
+            print(cliente.Account(*params))
+            continue
         if command == 'reinitialize':
-            pass
+            print(cliente.Reinitialize())
+            continue
         if command == 'stru':
-            pass
+            print(cliente.FileStructure())
+            continue
         if command == 'smnt':
-            pass
+            print(cliente.StructureMount())
+            continue
         if command == 'mode':
-            pass
+            print(cliente.TransferMode())
+            continue
         if command == 'uploadu':
-            pass
+            print(cliente.UploadUnique(*params))
+            continue
         if command == 'append':
-            pass
+            print(cliente.Append(*params))
+            continue
         if command == 'allocate':
-            pass
+            print(cliente.Allocate(*params))
+            continue
