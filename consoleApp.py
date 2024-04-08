@@ -8,69 +8,89 @@ def Application():
     user = input()
     print('Por favor introduzca la contrasena: ')
     password = input()
-    cliente = FTPClient(ip, port)
-    cliente.connect(user, password)
-    cliente.logIn()
+    if password is None: password = ""
+    cliente = FTPClient(ip, int(port))
+    if password is '': print('Ejel vacio')
+    print(cliente.connect(user, password))
+    print(cliente.logIn())
     while True:
         print('Por favor introduzca el comando: ')
-        command = input()
-        if command.lower().split(' ')[0] == 'cd':
+        commandParts = input().strip().split(" ")
+        command = commandParts[0].lower()
+        params = commandParts[1:]
+        if command == 'cd':
+            print(cliente.cwd(*params))
+            continue
+        if command == 'mkdir':
+            print(cliente.mkdir(*params))
+            continue
+        if command == 'rmdir':
+            print(cliente.rmdir(*params))
+            continue
+        if command == 'ls':
+            print(cliente.nlist(*params))
+            continue
+        if command == 'ls-a':
+            print(cliente.list(*params))
+            continue
+        if command == 'exit':
+            print(cliente.exit())
+            continue
+        if command == 'pwd':
+            print(cliente.print_working_directory())
+            continue
+        if command == 'upload':
+            print(cliente.UpLoad(*params))
+            continue
+        if command == 'download':
+            print(cliente.Download(*params))
+            continue
+        if command == 'passive':
+            print(cliente.passiveMode())
+            continue
+        if command == 'sizeof':
+            print(cliente.get_size(*params))
+            continue
+        if command == 'help':
+            print(cliente.help(*params))
+            continue
+        if command == 'cancel':
+            print(cliente.abor())
+            continue
+        if command == 'noop':
+            print(cliente.NoOp())
+            continue
+        if command == 'rename':
+            print(cliente.rename(*params))
+            continue
+        # 
+        if command == 'status':
             pass
-        if command.lower().split(' ')[0] == 'mkdir':
+        if command == 'system':
             pass
-        if command.lower().split(' ')[0] == 'rmdir':
+        if command == 'siteparams':
             pass
-        if command.lower().split(' ')[0] == 'ls':
+        if command == 'delete':
             pass
-        if command.lower().split(' ')[0] == 'ls-a':
+        if command == 'restarttransfer':
             pass
-        if command.lower().split(' ')[0] == 'exit':
+        if command == 'cdup':
             pass
-        if command.lower().split(' ')[0] == 'pwd':
+        if command == 'port':
             pass
-        if command.lower().split(' ')[0] == 'upload':
+        if command == 'acc':
             pass
-        if command.lower().split(' ')[0] == 'download':
+        if command == 'reinitialize':
             pass
-        if command.lower().split(' ')[0] == 'passive':
+        if command == 'stru':
             pass
-        if command.lower().split(' ')[0] == 'sizeof':
+        if command == 'smnt':
             pass
-        if command.lower().split(' ')[0] == 'help':
+        if command == 'mode':
             pass
-        if command.lower().split(' ')[0] == 'cancel':
+        if command == 'uploadu':
             pass
-        if command.lower().split(' ')[0] == 'noop':
+        if command == 'append':
             pass
-        if command.lower().split(' ')[0] == 'rename':
-            pass
-        if command.lower().split(' ')[0] == 'status':
-            pass
-        if command.lower().split(' ')[0] == 'system':
-            pass
-        if command.lower().split(' ')[0] == 'siteparams':
-            pass
-        if command.lower().split(' ')[0] == 'delete':
-            pass
-        if command.lower().split(' ')[0] == 'restarttransfer':
-            pass
-        if command.lower().split(' ')[0] == 'cdup':
-            pass
-        if command.lower().split(' ')[0] == 'port':
-            pass
-        if command.lower().split(' ')[0] == 'acc':
-            pass
-        if command.lower().split(' ')[0] == 'reinitialize':
-            pass
-        if command.lower().split(' ')[0] == 'stru':
-            pass
-        if command.lower().split(' ')[0] == 'smnt':
-            pass
-        if command.lower().split(' ')[0] == 'mode':
-            pass
-        if command.lower().split(' ')[0] == 'uploadu':
-            pass
-        if command.lower().split(' ')[0] == 'append':
-            pass
-        if command.lower().split(' ')[0] == 'allocate':
+        if command == 'allocate':
             pass

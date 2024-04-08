@@ -1,5 +1,6 @@
 from Redes import FTPClient
 import time
+import consoleApp
 
 def main():
     # while True:
@@ -30,4 +31,5 @@ def main():
     print(cliente.exit())
 
 if __name__ == "__main__":
-    main()
+    # main()
+    consoleApp.Application()
