@@ -2,94 +2,92 @@ from Redes import FTPClient
 import time
 import threading
 def Application():
-    print('Por favor introduzca la direccion ip del servidor: ')
-    ip = input()
-    print('Por favor introduzca el puerto: ')
-    port = input()
-    print('Por favor introduzca el usuario: ')
-    user = input()
-    print('Por favor introduzca la contrasena: ')
-    continueword = input()
-    if continueword is None: continueword = ""
-    cliente = FTPClient(ip, int(port))
-    if continueword is '': print('Ejel vacio')
-    print(cliente.connect(user, continueword))
-    print(cliente.logIn())
+    while True:
+        try:
+            print('Por favor introduzca la direccion ip del servidor: ')
+            ip = input()
+            print('Por favor introduzca el puerto: ')
+            port = input()
+            print('Por favor introduzca el usuario: ')
+            user = input()
+            print('Por favor introduzca la contrasena: ')
+            continueword = input()
+            if continueword is None: continueword = ""
+            cliente = FTPClient(ip, int(port))
+            if continueword is '': print('Ejel vacio')
+            print(cliente.connect(user, continueword))
+            print(cliente.logIn())
+            break
+        except Exception as e:
+            print("\n etecsa se porta mal \n")
+            print(e)
+            
     while True:
         print('Por favor introduzca el comando: ')
         commandParts = input().strip().split(" ")
         command = commandParts[0].lower()
         params = commandParts[1:]
+
         
-        
-        if command == 'terminate':
-            print('Desconectando.')
-            print('Desconectando..')
-            print('Desconectando...')
-            break
-        if command == 'cd':
+        if command == 'cwd':
             print(cliente.cwd(*params))
             continue
-        if command == 'mkdir':
+        if command == 'mkd':
             print(cliente.mkdir(*params))
             continue
-        if command == 'rmdir':
+        if command == 'rmd':
             print(cliente.rmdir(*params))
             continue
-        if command == 'ls':
+        if command == 'nlst':
             def DownloadUnique():
                 print(cliente.nlist(*params))
                 print(cliente.getResponse())
-                time.sleep(15)
             t = threading.Thread(target=DownloadUnique)
             t.start()
             continue
-        if command == 'ls-a':
+        if command == 'list':
             def Append():
                 print(cliente.list(*params))
                 print(cliente.getResponse())
-                time.sleep(15)
             t = threading.Thread(target=Append)
             t.start()
             continue
-        if command == 'exit':
+        if command == 'quit':
             print(cliente.exit())
-            continue
+            break
         if command == 'pwd':
             print(cliente.print_working_directory())
             continue
-        if command == 'upload':
+        if command == 'stor':
             def UpLoad():
                 print(cliente.UpLoad(*params))
                 print(cliente.getResponse())
-                time.sleep(15)
             t = threading.Thread(target=UpLoad)
             t.start()
             continue
-        if command == 'download':
+        if command == 'retr':
             def Download():
                 print(cliente.Download(*params))
                 print(cliente.getResponse())
-                time.sleep(15)
             t = threading.Thread(target=Download)
             t.start()
             continue
-        if command == 'passive':
+        if command == 'pass':
             print(cliente.passiveMode())
             continue
-        if command == 'sizeof':
+        if command == 'size':
             print(cliente.get_size(*params))
             continue
         if command == 'help':
             def help():
                 print(cliente.help(*params))
                 print(cliente.getResponse())
-                time.sleep(15)
             t = threading.Thread(target=help)
             t.start()
             continue
-        if command == 'cancel':
+        if command == 'abor':
             print(cliente.abor())
+            print(cliente.getResponse())
             continue
         if command == 'noop':
             print(cliente.NoOp())
@@ -97,19 +95,19 @@ def Application():
         if command == 'rename':
             print(cliente.rename(*params))
             continue
-        if command == 'status':
+        if command == 'stat':
             print(cliente.getStatus(*params))
             continue
-        if command == 'system':
+        if command == 'syst':
             print(cliente.getSystem())
             continue
-        if command == 'siteparams':
+        if command == 'site':
             print(cliente.getSiteParameters())
             continue
-        if command == 'delete':
+        if command == 'dele':
             print(cliente.deleteFile(*params))
             continue
-        if command == 'restarttransfer':
+        if command == 'rest':
             print(cliente.restartTransfer(*params))
             continue
         if command == 'cdup':
@@ -118,10 +116,10 @@ def Application():
         if command == 'port':
             print(cliente.DataPort(*params))
             continue
-        if command == 'acc':
+        if command == 'acct':
             print(cliente.Account(*params))
             continue
-        if command == 'reinitialize':
+        if command == 'rein':
             print(cliente.Reinitialize())
             continue
         if command == 'stru':
@@ -133,22 +131,27 @@ def Application():
         if command == 'mode':
             print(cliente.TransferMode())
             continue
-        if command == 'uploadu':
+        if command == 'stou':
             def UploadUnique():
                 print(cliente.UploadUnique(*params))
                 print(cliente.getResponse())
-                time.sleep(15)
             t = threading.Thread(target=UploadUnique)
             t.start()
             continue
-        if command == 'append':
+        if command == 'appe':
             def Append():
                 print(cliente.Append(*params))
                 print(cliente.getResponse())
-                time.sleep(15)
             t = threading.Thread(target=Append)
             t.start()
             continue
-        if command == 'allocate':
+        if command == 'allo':
             print(cliente.Allocate(*params))
+            continue
+        if command == 'user':
+            print(cliente.user(*params))
+        if command == 'pass':
+            print(cliente.password(*params))
+        else:
+            print("comando no reconocido")
             continue

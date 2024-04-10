@@ -15,6 +15,14 @@ class FTPClient:
         self.userName = username
         self.password = password
         return self.getResponse()
+    
+    def user(self, username = ''):
+        resp = self.SendCommand('USER ' + username)
+        return resp
+    
+    def password(self, password = ''):
+        resp = self.SendCommand('PASS ' + password)
+        return resp
 
     def getResponse(self):
         response = ''
@@ -291,6 +299,9 @@ class FTPClient:
             return self.SendCommand('ALLO ' + numberOfBytes)
         else:
             return self.SendCommand('ALLO ' + numberOfBytes + ' ' + 'R' + ' ' + Size)
+    def TYPE(self, type):
+        resp = self.SendCommand('TYPE {type}')
+        return resp
     def exit(self):
         response = self.SendCommand('QUIT')
         self.control_socket.close()
