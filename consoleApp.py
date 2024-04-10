@@ -1,5 +1,6 @@
 from Redes import FTPClient
 import time
+import threading
 def Application():
     print('Por favor introduzca la direccion ip del servidor: ')
     ip = input()
@@ -36,12 +37,20 @@ def Application():
             print(cliente.rmdir(*params))
             continue
         if command == 'ls':
-            print(cliente.nlist(*params))
-            print(cliente.getResponse())
+            def DownloadUnique():
+                print(cliente.nlist(*params))
+                print(cliente.getResponse())
+                time.sleep(15)
+            t = threading.Thread(target=DownloadUnique)
+            t.start()
             continue
         if command == 'ls-a':
-            print(cliente.list(*params))
-            print(cliente.getResponse())
+            def Append():
+                print(cliente.list(*params))
+                print(cliente.getResponse())
+                time.sleep(15)
+            t = threading.Thread(target=Append)
+            t.start()
             continue
         if command == 'exit':
             print(cliente.exit())
@@ -50,21 +59,34 @@ def Application():
             print(cliente.print_working_directory())
             continue
         if command == 'upload':
-            print(cliente.UpLoad(*params))
-            print(cliente.getResponse())
+            def UpLoad():
+                print(cliente.UpLoad(*params))
+                print(cliente.getResponse())
+                time.sleep(15)
+            t = threading.Thread(target=UpLoad)
+            t.start()
             continue
         if command == 'download':
-            print(cliente.Download(*params))
-            print(cliente.getResponse())
+            def Download():
+                print(cliente.Download(*params))
+                print(cliente.getResponse())
+                time.sleep(15)
+            t = threading.Thread(target=Download)
+            t.start()
             continue
-        if command == 'continueive':
-            print(cliente.continueiveMode())
+        if command == 'passive':
+            print(cliente.passiveMode())
             continue
         if command == 'sizeof':
             print(cliente.get_size(*params))
             continue
         if command == 'help':
-            print(cliente.help(*params))
+            def help():
+                print(cliente.help(*params))
+                print(cliente.getResponse())
+                time.sleep(15)
+            t = threading.Thread(target=help)
+            t.start()
             continue
         if command == 'cancel':
             print(cliente.abor())
@@ -112,10 +134,20 @@ def Application():
             print(cliente.TransferMode())
             continue
         if command == 'uploadu':
-            print(cliente.UploadUnique(*params))
+            def UploadUnique():
+                print(cliente.UploadUnique(*params))
+                print(cliente.getResponse())
+                time.sleep(15)
+            t = threading.Thread(target=UploadUnique)
+            t.start()
             continue
         if command == 'append':
-            print(cliente.Append(*params))
+            def Append():
+                print(cliente.Append(*params))
+                print(cliente.getResponse())
+                time.sleep(15)
+            t = threading.Thread(target=Append)
+            t.start()
             continue
         if command == 'allocate':
             print(cliente.Allocate(*params))
