@@ -87,7 +87,6 @@ def Application():
             continue
         if command == 'abor':
             print(cliente.abor())
-            print(cliente.getResponse())
             continue
         if command == 'noop':
             print(cliente.NoOp())
@@ -97,6 +96,7 @@ def Application():
             continue
         if command == 'stat':
             print(cliente.getStatus(*params))
+            print(cliente.getResponse())
             continue
         if command == 'syst':
             print(cliente.getSystem())

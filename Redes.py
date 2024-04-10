@@ -97,7 +97,7 @@ class FTPClient:
         Args:
             nombre (str): El nombre del directorio a crear.
         """
-        self.SendCommand('MKD ' + nombre)
+        return self.SendCommand('MKD ' + nombre)
 
     def rmdir(self, nombre: str):
         """
@@ -106,7 +106,7 @@ class FTPClient:
         Args:
             nombre (str): El nombre del directorio a eliminar.
         """
-        self.SendCommand('RMD ' + nombre)
+        return self.SendCommand('RMD ' + nombre)
 
     def get_size(self, nombre: str):
         """
@@ -115,7 +115,7 @@ class FTPClient:
         Args:
             nombre (str): El nombre del archivo del que se quiere obtener el tamaño.
         """
-        self.SendCommand('SIZE ' + nombre)
+        return self.SendCommand('SIZE ' + nombre)
 
     def Download(self, remoteDirectory: str, type='A'):
         data_socket = self.passiveMode()
@@ -167,6 +167,8 @@ class FTPClient:
             return resp
         
     def abor(self):
+        resp = self.SendCommand('ABOR')
+        resp += self.getResponse()
         return self.SendCommand('ABOR')
         
     def cwd(self, path):
